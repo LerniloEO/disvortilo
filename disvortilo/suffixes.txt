@@ -1,0 +1,45 @@
+aĉ  # contemptible
+ad  # frequent or continuous action (gerund)
+aĵ  # substance
+an  # member
+ar  # collection of
+ĉj  # male affectionate suffix
+ebl  # possibility
+ec  # abstract quality; -ness
+eg  # of great size or degree
+ej  # place
+em  # tending to
+end  # something that must be done
+er  # single, individual, unit
+estr  # leader
+et  # of small size or degree
+id  # offspring
+ig  # causing something to be
+iĝ  # becoming something
+il  # instrument; tool
+ind  # worthy of
+ing  # holder for an object
+in  # feminine suffix
+ism  # -ism
+ist  # -ist
+nj  # female affectionate suffix
+obl  # times (with numbers)
+on  # fraction (with numbers)
+op  # together (with numbers)
+uj  # container
+ul  # person possessing a certain quality
+um  # indefinite suffix
+
+# passive forms
+at
+it
+ot
+
+# active forms
+ant
+int
+ont
+
+
+# Unofficial
+iĉ  # masculine form

@@ -1,0 +1,9 @@
+.idea/
+dist/
+disvortilo.egg-info
+
+.venv
+uv.lock
+
+**/__pycache__/
+**/*.pyc
