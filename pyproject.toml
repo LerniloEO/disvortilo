@@ -1,0 +1,35 @@
+[project]
+name = "disvortilo"
+version = "0.1.0"
+description = "Disvortilo is a simple tool that breaks Esperanto words into roots and affixes."
+requires-python = ">=3.9"
+dependencies = []
+authors = [
+    { name = "Franz Weingartz", email = "scaui0@gmx.net" }
+]
+license = "MIT"
+license-files = ["LICENSE"]
+readme = "README.md"
+keywords = ["Esperanto", "morphology", "linguistics", "NLP"]
+classifiers = [
+    "Topic :: Text Processing :: Linguistic",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3"
+]
+
+[project.urls]
+Homepage = "https://github.com/LerniloEO/disvortilo"
+Repository = "https://github.com/LerniloEO/disvortilo"
+Issues = "https://github.com/LerniloEO/disvortilo/issues"
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+
+[tool.setuptools.packages.find]
+where = ["."]
+
+[tool.setuptools.package-data]
+disvortilo = ["*.txt"]
