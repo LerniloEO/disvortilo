@@ -24,6 +24,7 @@ jobs:
       - name: Store the distribution packages
         uses: actions/upload-artifact@v5
         with:
+          name: python-package-distributions
           path: dist/
 
   publish:
