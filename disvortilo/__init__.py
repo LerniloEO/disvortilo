@@ -149,12 +149,12 @@ class Disvortilo:
 _ESPERANTO_SPLIT_WORDS = r"[A-Za-zĉĝĥĵŝŭĈĜĤĴŜŬ0-9]+"
 
 
-def _split_sentence(sentence: str):
+def split_sentence(sentence: str):
     return re.findall(_ESPERANTO_SPLIT_WORDS, sentence)
 
 
 def _parse_sentence(sentence: str):
-    words = _split_sentence(sentence)
+    words = split_sentence(sentence)
 
     disvortilo = Disvortilo()
 
