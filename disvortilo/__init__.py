@@ -1,9 +1,26 @@
+import enum
 import importlib.resources
 import re
 from collections.abc import Generator
 
 
-def load_word_list(resource_name: str) -> set[str]:
+class WordPart(enum.Enum):
+    PREFIX = enum.auto()
+    ROOT = enum.auto()
+    SUFFIX = enum.auto()
+    FULL_WORD = enum.auto()
+    # Part of speech
+    POS = enum.auto()
+    NUMBER = enum.auto()
+
+    CORRELATIVE_START = enum.auto()
+    CORRELATIVE_END = enum.auto()
+
+    def __repr__(self):
+        return self.name
+
+
+def _load_word_list(resource_name: str) -> set[str]:
     result = []
     for line in importlib.resources.files(__package__).joinpath(resource_name).read_text("utf-8").splitlines():
         # Remove comments
@@ -16,7 +33,7 @@ def load_word_list(resource_name: str) -> set[str]:
     return set(result)
 
 
-def growing_string(string: str) -> Generator[str]:
+def _growing_string(string: str) -> Generator[str]:
     before = ""
     for char in string:
         before += char
@@ -43,25 +60,25 @@ CORRELATIVE_WORD_ENDS = {
 
 class Disvortilo:
     def __init__(self):
-        self.suffixes = load_word_list("suffixes.txt")
-        self.prefixes = load_word_list("prefixes.txt")
-        self.roots = load_word_list("roots.txt")
-        self.full_words = load_word_list("full_words.txt")
+        self.suffixes = _load_word_list("suffixes.txt")
+        self.prefixes = _load_word_list("prefixes.txt")
+        self.roots = _load_word_list("roots.txt")
+        self.full_words = _load_word_list("full_words.txt")
 
-    def _is_in(self, word: str, _suffix, _prefix, _root, _full_word):
+    def _is_in(self, word: str, _suffix, _prefix, _root, _full_word) -> WordPart | None:
         if _root and word in self.roots:
-            return "root"
+            return WordPart.ROOT
         elif _suffix and word in self.suffixes:
-            return "suffix"
+            return WordPart.SUFFIX
         elif _prefix and word in self.prefixes:
-            return "prefix"
+            return WordPart.PREFIX
         elif _full_word and word in self.full_words:
-            return "full_words"
+            return WordPart.FULL_WORD
 
-        return ""
+        return None
 
-    def _parse_correlative(self, word: str) -> list[tuple[str, ...]]:
-        for part in growing_string(word):
+    def _parse_correlative(self, word: str) -> list[tuple[tuple[str, WordPart], ...]]:
+        for part in _growing_string(word):
             if part in CORRELATIVE_WORD_STARTS:
                 prefix = part
                 remaining = word[len(part):]
@@ -71,19 +88,19 @@ class Disvortilo:
             return []
 
         if remaining in CORRELATIVE_WORD_ENDS:
-            return [(prefix, remaining)]
+            return [((prefix, WordPart.CORRELATIVE_START), (remaining, WordPart.CORRELATIVE_END))]
 
         return []
 
-    def _parse_number(self, word: str) -> list[tuple[str, ...]]:
+    def _parse_number(self, word: str) -> list[tuple[tuple[str, WordPart], ...]]:
         valid = []
-        for part in growing_string(word):
+        for part in _growing_string(word):
             if part.isdigit():
                 remaining = word[len(part):]
                 if not remaining:
-                    valid.append((part,))
+                    valid.append(((part, WordPart.NUMBER),))
                 elif remaining in ("a", "an"):
-                    valid.append((part, remaining))
+                    valid.append(((part, WordPart.NUMBER), (remaining, WordPart.POS)))
 
         return valid
 
@@ -99,9 +116,9 @@ class Disvortilo:
             _correlative: bool = True,
             _full_word_standalone: bool = True,
             _number: bool = True
-    ) -> list[tuple[str, ...]]:
+    ) -> list[tuple[tuple[str, WordPart], ...]]:
         if _full_word_standalone and word in self.full_words:
-            return [(word,)]
+            return [((word, WordPart.FULL_WORD),)]
 
         if _correlative:
             correlative = self._parse_correlative(word)
@@ -114,7 +131,7 @@ class Disvortilo:
                 return number
 
         valid = []
-        for part in growing_string(word):
+        for part in _growing_string(word):
             if check := self._is_in(part, _suffix, _prefix, _root, _full_word_integrated):
                 remaining = word[len(part):]
                 if remaining.startswith("o") and len(remaining) > 1:
@@ -127,11 +144,11 @@ class Disvortilo:
                         _number=False
                     )
                     for parsed_part in remaining_parsed:
-                        valid.append((part, "o") + parsed_part)
+                        valid.append(((part, check), ("o", WordPart.POS)) + parsed_part)
 
-                if check != "prefix" and remaining in WORD_ENDS:
+                if check != WordPart.PREFIX and remaining in WORD_ENDS:
                     # Allow if the prefix can be used as a root too. Disallow an end after a prefix
-                    valid.append((part, remaining))
+                    valid.append(((part, check), (remaining, WordPart.POS)))
                 else:  # try recursion
                     remaining_parsed = self.parse(
                         remaining,
@@ -141,7 +158,7 @@ class Disvortilo:
                         _number=False
                     )
                     for parsed_part in remaining_parsed:
-                        valid.append((part,) + parsed_part)
+                        valid.append(((part, check),) + parsed_part)
 
         return valid
 
@@ -151,22 +168,3 @@ _ESPERANTO_SPLIT_WORDS = r"[A-Za-zĉĝĥĵŝŭĈĜĤĴŜŬ0-9]+"
 
 def split_sentence(sentence: str):
     return re.findall(_ESPERANTO_SPLIT_WORDS, sentence)
-
-
-def _parse_sentence(sentence: str):
-    words = split_sentence(sentence)
-
-    disvortilo = Disvortilo()
-
-    parsed_words = (disvortilo.parse(word) or word for word in words)
-
-    end = "\n"
-    sep = "·"
-
-    for parsed in parsed_words:
-        if isinstance(parsed, str):
-            print(f"~{parsed}~", end=end)
-        else:
-            print("    ".join(sep.join(option) for option in parsed), end=end)
-
-    print()
