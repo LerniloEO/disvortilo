@@ -23,7 +23,7 @@ Repository = "https://github.com/LerniloEO/disvortilo"
 Issues = "https://github.com/LerniloEO/disvortilo/issues"
 
 [build-system]
-requires = ["setuptools>=61.0", "setuptools-autover"]
+requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
@@ -33,7 +33,3 @@ where = ["."]
 
 [tool.setuptools.package-data]
 disvortilo = ["*.txt"]
-
-[tool.setuptools-autover]
-autover = true
-tag-prefix = "v"
