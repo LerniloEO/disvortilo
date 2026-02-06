@@ -24,4 +24,8 @@ print(disvortilo.parse("malliberejo"))
 # like "Esperanto" which means "a hoping person"
 print(disvortilo.parse("esperantistino"))
 # > [('esper', 'ant', 'ist', 'in', 'o'), ('esperant', 'ist', 'in', 'o')]
+
+# you can also get the morphemes of the word
+print(disvortilo.parse_detailed("plibonigojn"))
+# > [(('pli', FULL_WORD), ('bon', ROOT), ('ig', SUFFIX), ('ojn', POS))]
 ```

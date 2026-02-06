@@ -104,7 +104,16 @@ class Disvortilo:
 
         return valid
 
-    def parse(
+    def parse(self, word: str) -> list[tuple[str, ...]]:
+        detailed = self.parse_detailed(word)
+
+        result = []
+        for option in detailed:
+            result.append(tuple(part[0] for part in option))
+
+        return result
+
+    def parse_detailed(
             self,
             word: str,
 
@@ -135,12 +144,12 @@ class Disvortilo:
             if check := self._is_in(part, _suffix, _prefix, _root, _full_word_integrated):
                 remaining = word[len(part):]
                 if remaining.startswith("o") and len(remaining) > 1:
-                    remaining_parsed = self.parse(
+                    remaining_parsed = self.parse_detailed(
                         remaining[1:],
-                        _correlative=False,
-                        _full_word_standalone=False,
                         _suffix=False,
                         _prefix=False,
+                        _correlative=False,
+                        _full_word_standalone=False,
                         _number=False
                     )
                     for parsed_part in remaining_parsed:
@@ -150,11 +159,11 @@ class Disvortilo:
                     # Allow if the prefix can be used as a root too. Disallow an end after a prefix
                     valid.append(((part, check), (remaining, WordPart.POS)))
                 else:  # try recursion
-                    remaining_parsed = self.parse(
+                    remaining_parsed = self.parse_detailed(
                         remaining,
+                        _suffix=True,
                         _correlative=False,
                         _full_word_standalone=False,
-                        _suffix=True,
                         _number=False
                     )
                     for parsed_part in remaining_parsed:
