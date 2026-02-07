@@ -24,6 +24,13 @@ mil
 morgaŭ
 sen
 
+# Names
+
+tomas
+tom
+maria
+mary
+
 # Taken from eoparser/full_words.txt:
 
 adiaŭ
