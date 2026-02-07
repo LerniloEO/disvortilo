@@ -35,7 +35,7 @@ mal
 
 # Names
 
-manjo
+manj
 
 # Normal roots
 
