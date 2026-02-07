@@ -79,7 +79,7 @@ class Disvortilo:
 
         return None
 
-    def _parse_correlative(self, word: str) -> list[tuple[tuple[str, WordPart], ...]]:
+    def _parse_correlative(self, word: str, _allow_remaining: bool = False) -> list[tuple[tuple[str, WordPart], ...]]:
         for part in _growing_string(word):
             if part in CORRELATIVE_WORD_STARTS:
                 prefix = part
@@ -89,10 +89,18 @@ class Disvortilo:
             # word didn't match the word starts
             return []
 
-        if remaining in CORRELATIVE_WORD_ENDS:
-            return [((prefix, WordPart.CORRELATIVE_START), (remaining, WordPart.CORRELATIVE_END))]
+        valid = []
+        for end in _growing_string(remaining):
+            if end in CORRELATIVE_WORD_ENDS:
+                after_correlative = remaining[len(end):]
+                if not after_correlative:
+                    # Complete correlative, no remaining text
+                    valid.append(((prefix, WordPart.CORRELATIVE_START), (end, WordPart.CORRELATIVE_END)))
+                elif _allow_remaining:
+                    # Correlative with remaining text - will be handled by caller
+                    valid.append(((prefix, WordPart.CORRELATIVE_START), (end, WordPart.CORRELATIVE_END)))
 
-        return []
+        return valid
 
     def _parse_number(self, word: str) -> list[tuple[tuple[str, WordPart], ...]]:
         valid = []
@@ -142,6 +150,29 @@ class Disvortilo:
                 return number
 
         valid = []
+
+        if _correlative:
+            correlative_matches = self._parse_correlative(word, _allow_remaining=True)
+            for correlative_parts in correlative_matches:
+                # calculate the length of the correlative
+                correlative_length = sum(len(part[0]) for part in correlative_parts)
+                remaining = word[correlative_length:]
+
+                if not remaining:
+                    valid.append(correlative_parts)
+                else:
+                    remaining_parsed = self.parse_detailed(
+                        remaining,
+                        _suffix=True,
+                        _prefix=False,
+                        _root=True,
+                        _correlative=False,
+                        _full_word_standalone=False,
+                        _number=False
+                    )
+                    for parsed_part in remaining_parsed:
+                        valid.append(correlative_parts + parsed_part)
+
         for part in _growing_string(word):
             if check := self._is_in(part, _suffix, _prefix, _root, _full_word_integrated):
                 remaining = word[len(part):]
