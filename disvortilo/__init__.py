@@ -59,6 +59,9 @@ CORRELATIVE_WORD_ENDS = {
     "e", "en",
     "am", "el", "es", "om", "al"
 }
+INTERFIXES = {
+    "o", "i", "a", "e"
+}
 
 
 class Disvortilo:
@@ -199,7 +202,7 @@ class Disvortilo:
         for part in _growing_string(word):
             if check := self._is_in(part, _suffix, _prefix, _root, _full_word_integrated):
                 remaining = word[len(part):]
-                if remaining.startswith("o") and len(remaining) > 1:
+                if len(remaining) > 1 and remaining[0] in INTERFIXES:
                     remaining_parsed = self.parse_detailed(
                         remaining[1:],
                         _suffix=False,
@@ -209,7 +212,7 @@ class Disvortilo:
                         _number=False
                     )
                     for parsed_part in remaining_parsed:
-                        valid.append(((part, check), ("o", WordPart.POS)) + parsed_part)
+                        valid.append(((part, check), (remaining[0], WordPart.POS)) + parsed_part)
 
                 if check != WordPart.PREFIX and remaining in WORD_ENDS:
                     # Allow if the prefix can be used as a root too. Disallow an end after a prefix
