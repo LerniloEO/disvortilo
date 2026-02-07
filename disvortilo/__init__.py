@@ -71,6 +71,9 @@ class Disvortilo:
         self.roots = _load_word_list("roots.txt")
         self.full_words = _load_word_list("full_words.txt")
         self.names = _load_word_list("names.txt")
+        self.countries = _load_word_list("countries.txt")
+
+        self.roots.update(self.countries)  # all country names are also roots.
 
     def _is_in(self, word: str, _suffix, _prefix, _root, _full_word) -> WordPart | None:
         if _suffix and word in self.suffixes:
@@ -194,7 +197,8 @@ class Disvortilo:
                         _root=True,
                         _correlative=False,
                         _full_word_standalone=False,
-                        _number=False
+                        _number=False,
+                        _name=False
                     )
                     for parsed_part in remaining_parsed:
                         valid.append(correlative_parts + parsed_part)
@@ -209,12 +213,14 @@ class Disvortilo:
                         _prefix=False,
                         _correlative=False,
                         _full_word_standalone=False,
-                        _number=False
+                        _number=False,
+                        _name=False
                     )
                     for parsed_part in remaining_parsed:
                         valid.append(((part, check), (remaining[0], WordPart.POS)) + parsed_part)
 
-                if check != WordPart.PREFIX and remaining in WORD_ENDS:
+                if check != WordPart.PREFIX and (
+                        remaining in WORD_ENDS or (part in self.countries and remaining == "io")):
                     # Allow if the prefix can be used as a root too. Disallow an end after a prefix
                     valid.append(((part, check), (remaining, WordPart.POS)))
                 else:  # try recursion
@@ -223,7 +229,8 @@ class Disvortilo:
                         _suffix=check != WordPart.PREFIX,  # Disallow words without roots like praanto
                         _correlative=False,
                         _full_word_standalone=check == WordPart.PREFIX,  # Allow words like malantaŭ
-                        _number=False
+                        _number=False,
+                        _name=False
                     )
                     for parsed_part in remaining_parsed:
                         valid.append(((part, check),) + parsed_part)
