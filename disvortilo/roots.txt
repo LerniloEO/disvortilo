@@ -6,6 +6,29 @@ arĝent
 roz
 ĉiel
 ark
+aŭto
+intenc
+fil
+ĉes
+kurac
+pardon
+fest
+kafo
+polic
+lac
+pord
+san
+sun
+ĝarden
+promes
+stud
+kor
+student
+bus
+ter
+oficej
+histori
+strang
 
 # Colors
 nigr
