@@ -126,7 +126,6 @@ ali
 alt
 am
 amas
-amerik
 amik
 ampleks
 amuz
@@ -160,7 +159,6 @@ bilet
 bird
 bon
 botel
-bulgar
 cel
 centr
 cert
@@ -229,7 +227,6 @@ forges
 form
 fort
 fot
-franc
 frank
 frat
 fraz
@@ -238,7 +235,6 @@ frenez
 fru
 funkci
 fuŝ
-german
 giĉet
 grad
 grand
@@ -264,9 +260,6 @@ interes
 interpret
 invit
 ir
-iran
-ital
-japan
 jar
 jun
 kamp
@@ -598,7 +591,6 @@ zorg
 ĉarm
 ĉef
 ĉeval
-ĉin
 ĝen
 ĝeneral
 ĝoj

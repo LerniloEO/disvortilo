@@ -1,0 +1,11 @@
+german
+franc
+ital
+iran
+japan
+bulgar
+angl
+dan
+rus
+sved
+ĉin
