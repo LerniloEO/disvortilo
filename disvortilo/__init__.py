@@ -54,7 +54,7 @@ CORRELATIVE_WORD_STARTS = {
 CORRELATIVE_WORD_ENDS = {
     "o", "on", "oj", "ojn",
     "u", "un", "uj", "ujn",
-    "a",
+    "a", "an",
     "e", "en",
     "am", "el", "es", "om", "al"
 }

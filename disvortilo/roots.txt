@@ -1,5 +1,8 @@
 esperant
 fingr
+di
+
+# Affixes
 aĉ
 ad
 aĵ
@@ -29,6 +32,12 @@ ul
 um
 
 mal
+
+# Names
+
+manjo
+
+# Normal roots
 
 absolut
 adres
