@@ -68,14 +68,14 @@ class Disvortilo:
         self.full_words = _load_word_list("full_words.txt")
 
     def _is_in(self, word: str, _suffix, _prefix, _root, _full_word) -> WordPart | None:
-        if _root and word in self.roots:
-            return WordPart.ROOT
-        elif _suffix and word in self.suffixes:
+        if _suffix and word in self.suffixes:
             return WordPart.SUFFIX
         elif _prefix and word in self.prefixes:
             return WordPart.PREFIX
         elif _full_word and word in self.full_words:
             return WordPart.FULL_WORD
+        elif _root and word in self.roots:
+            return WordPart.ROOT
 
         return None
 
