@@ -217,9 +217,9 @@ class Disvortilo:
                 else:  # try recursion
                     remaining_parsed = self.parse_detailed(
                         remaining,
-                        _suffix=True,
+                        _suffix=check != WordPart.PREFIX,  # Disallow words without roots like praanto
                         _correlative=False,
-                        _full_word_standalone=False,
+                        _full_word_standalone=check == WordPart.PREFIX,  # Allow words like malantaŭ
                         _number=False
                     )
                     for parsed_part in remaining_parsed:
