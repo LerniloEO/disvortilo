@@ -1,6 +1,22 @@
 esperant
 fingr
 di
+or
+arĝent
+roz
+ĉiel
+ark
+
+# Colors
+nigr
+blu
+brun
+verd
+griz
+viol
+ruĝ
+blank
+flav
 
 # Affixes
 aĉ
@@ -18,6 +34,8 @@ er
 estr
 et
 id
+ig
+iĝ
 il
 ind
 ing
@@ -32,10 +50,6 @@ ul
 um
 
 mal
-
-# Names
-
-manj
 
 # Normal roots
 

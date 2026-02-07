@@ -24,13 +24,6 @@ mil
 morgaŭ
 sen
 
-# Names
-
-tomas
-tom
-maria
-mary
-
 # Taken from eoparser/full_words.txt:
 
 adiaŭ
@@ -126,9 +119,3 @@ nord
 krom
 ambaŭ
 malpli
-escepte
-#okcident
-#nord
-#sud
-#orient
-#centr
