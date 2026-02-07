@@ -13,6 +13,7 @@ class WordPart(enum.Enum):
     # Part of speech
     POS = enum.auto()
     NUMBER = enum.auto()
+    NAME = enum.auto()
 
     CORRELATIVE_START = enum.auto()
     CORRELATIVE_END = enum.auto()
@@ -66,6 +67,7 @@ class Disvortilo:
         self.prefixes = _load_word_list("prefixes.txt")
         self.roots = _load_word_list("roots.txt")
         self.full_words = _load_word_list("full_words.txt")
+        self.names = _load_word_list("names.txt")
 
     def _is_in(self, word: str, _suffix, _prefix, _root, _full_word) -> WordPart | None:
         if _suffix and word in self.suffixes:
@@ -114,6 +116,21 @@ class Disvortilo:
 
         return valid
 
+    def _parse_name(self, word: str):
+        valid = []
+        for part in _growing_string(word):
+            remaining = word[len(part):]
+            if remaining[:2] in {"ĉj", "nj"} and remaining[2:] in WORD_ENDS:
+                valid.append(((part, WordPart.NAME), (remaining[:2], WordPart.SUFFIX), (remaining[2:], WordPart.POS)))
+
+            elif part in self.names:
+                if remaining in WORD_ENDS:
+                    valid.append(((part, WordPart.NAME), (remaining, WordPart.POS)))
+                elif not remaining:
+                    valid.append(((part, WordPart.NAME),))
+
+        return valid
+
     def parse(self, word: str) -> list[tuple[str, ...]]:
         detailed = self.parse_detailed(word)
 
@@ -134,7 +151,8 @@ class Disvortilo:
             _full_word_integrated: bool = True,
             _correlative: bool = True,
             _full_word_standalone: bool = True,
-            _number: bool = True
+            _number: bool = True,
+            _name: bool = True
     ) -> list[tuple[tuple[str, WordPart], ...]]:
         if _full_word_standalone and word in self.full_words:
             return [((word, WordPart.FULL_WORD),)]
@@ -148,6 +166,11 @@ class Disvortilo:
             number = self._parse_number(word)
             if number:
                 return number
+
+        if _name:
+            name = self._parse_name(word)
+            if name:
+                return name
 
         valid = []
 
