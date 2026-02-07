@@ -2,6 +2,7 @@ import enum
 import importlib.resources
 import re
 from collections.abc import Generator
+from functools import cache
 
 
 class WordPart(enum.Enum):
@@ -20,6 +21,7 @@ class WordPart(enum.Enum):
         return self.name
 
 
+@cache
 def _load_word_list(resource_name: str) -> set[str]:
     result = []
     for line in importlib.resources.files(__package__).joinpath(resource_name).read_text("utf-8").splitlines():
