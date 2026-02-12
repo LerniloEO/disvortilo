@@ -23,6 +23,8 @@ mil
 
 morgaŭ
 sen
+graŭ
+ekster
 
 # Taken from eoparser/full_words.txt:
 
@@ -116,7 +118,6 @@ ajn
 almenaŭ
 ĉirkaŭ
 ktp
-ia
 super
 nord
 krom
