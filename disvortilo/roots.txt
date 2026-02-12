@@ -43,7 +43,7 @@ posed
 krist
 ekzamen
 traf
-propra
+propr
 part
 kis
 kontent
@@ -66,8 +66,69 @@ kuŝ
 danc
 neĝ
 ĉapel
-vilaĝo
+vilaĝ
 konstru
+sang
+rezervi
+surpriz
+kap
+hund
+kat
+projekt
+faktor
+pluv
+fajr
+brul
+indik
+erar
+artikol
+mort
+glas
+fiks
+gast
+plezur
+hont
+taksi
+spekt
+permes
+egal
+dign
+raci
+kondut
+spirit
+vent
+best
+popol
+situ
+lum
+vizaĝ
+reg
+korp
+klas
+har
+lakt
+insul
+foli
+natur
+kastel
+leĝ
+art
+lun
+aer
+mur
+dolor
+bicikl
+danĝer
+taŭg
+ŝu
+anim
+akir
+bier
+kaŭz
+etern
+pac
+dolar
+evit
 
 # Colors
 nigr
@@ -112,6 +173,7 @@ ul
 um
 
 mal
+re
 
 # Normal roots
 

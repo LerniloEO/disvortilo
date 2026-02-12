@@ -228,7 +228,8 @@ class Disvortilo:
                         remaining,
                         _suffix=check != WordPart.PREFIX,  # Disallow words without roots like praanto
                         _correlative=False,
-                        _full_word_standalone=check == WordPart.PREFIX,  # Allow words like malantaŭ
+                        # Allow words like malantaŭ and dudek
+                        _full_word_standalone=check in {WordPart.PREFIX, WordPart.FULL_WORD},
                         _number=False,
                         _name=False
                     )
