@@ -47,7 +47,8 @@ WORD_ENDS = {
     "e", "en",
     "a", "an", "ajn", "aj",
     "o", "on", "ojn", "oj",
-    "as", "os", "is", "us", "u", "i"
+    "as", "os", "is", "us", "u", "i",
+    "'"
 }
 CORRELATIVE_WORD_STARTS = {
     "ki", "ti", "i", "ĉi", "neni"
@@ -239,7 +240,7 @@ class Disvortilo:
         return valid
 
 
-_ESPERANTO_SPLIT_WORDS = r"[A-Za-zĉĝĥĵŝŭĈĜĤĴŜŬ0-9]+"
+_ESPERANTO_SPLIT_WORDS = r"[A-Za-zĉĝĥĵŝŭĈĜĤĴŜŬ][A-Za-zĉĝĥĵŝŭĈĜĤĴŜŬ0-9]*'?|[0-9]+(?:an?)?"
 
 
 def split_sentence(sentence: str):
