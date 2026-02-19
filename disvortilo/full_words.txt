@@ -1,12 +1,3 @@
-min
-vin
-ŝin
-lin
-ĝin
-nin
-ilin
-sin
-
 unu
 du
 tri
@@ -25,6 +16,8 @@ morgaŭ
 sen
 graŭ
 ekster
+
+ri
 
 # Taken from eoparser/full_words.txt:
 
