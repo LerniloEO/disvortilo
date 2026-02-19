@@ -129,6 +129,7 @@ etern
 pac
 dolar
 evit
+ideal
 
 # Colors
 nigr

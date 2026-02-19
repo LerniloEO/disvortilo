@@ -63,6 +63,9 @@ CORRELATIVE_WORD_ENDS = {
 INTERFIXES = {
     "o", "i", "a", "e"
 }
+PERSONAL_PRONOUNS = {
+    "mi", "vi", "ŝi", "li", "ĝi", "oni", "ri", "ni", "ili"
+}
 
 
 class Disvortilo:
@@ -220,8 +223,10 @@ class Disvortilo:
                     for parsed_part in remaining_parsed:
                         valid.append(((part, check), (remaining[0], WordPart.POS)) + parsed_part)
 
-                if check != WordPart.PREFIX and (
-                        remaining in WORD_ENDS or (part in self.countries and remaining == "io")):
+                if (check != WordPart.PREFIX
+                        and (remaining in WORD_ENDS or ((part in self.countries and remaining == "io")
+                                                        or (part in PERSONAL_PRONOUNS and remaining == "n")))
+                ):
                     # Allow if the prefix can be used as a root too. Disallow an end after a prefix
                     valid.append(((part, check), (remaining, WordPart.POS)))
                 else:  # try recursion
