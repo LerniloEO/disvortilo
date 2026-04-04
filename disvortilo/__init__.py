@@ -193,6 +193,8 @@ class Disvortilo:
 
                 if not remaining:
                     valid.append(correlative_parts)
+                elif remaining in WORD_ENDS:
+                    valid.append(correlative_parts + ((remaining, WordPart.POS),))
                 else:
                     remaining_parsed = self.parse_detailed(
                         remaining,
