@@ -6,6 +6,12 @@ from functools import cache
 
 
 class WordPart(enum.Enum):
+    """Semantic categories assigned to parsed Esperanto morphemes.
+
+    The values are used by :meth:`Disvortilo.parse_detailed` to label each
+    segment of a parsed word.
+    """
+
     PREFIX = enum.auto()
     ROOT = enum.auto()
     SUFFIX = enum.auto()
@@ -69,7 +75,15 @@ PERSONAL_PRONOUNS = {
 
 
 class Disvortilo:
+    """Parser for splitting Esperanto words into morphemes.
+
+    The parser combines built-in lexicons for roots, affixes, full words,
+    personal names, and country names to produce one or more valid analyses.
+    """
+
     def __init__(self):
+        """Initialize parser dictionaries from packaged resource files."""
+
         self.suffixes = _load_word_list("suffixes.txt")
         self.prefixes = _load_word_list("prefixes.txt")
         self.roots = _load_word_list("roots.txt")
@@ -142,6 +156,16 @@ class Disvortilo:
         return valid
 
     def parse(self, word: str) -> list[tuple[str, ...]]:
+        """Return all valid morpheme segmentations for a word.
+
+        Args:
+            word: Esperanto word to analyze.
+
+        Returns:
+            A list of valid analyses. Each analysis is a tuple of morpheme
+            strings in order.
+        """
+
         detailed = self.parse_detailed(word)
 
         result = []
@@ -164,6 +188,27 @@ class Disvortilo:
             _number: bool = True,
             _name: bool = True
     ) -> list[tuple[tuple[str, WordPart], ...]]:
+        """Return all valid analyses with category labels for each segment.
+
+        Args:
+            word: Esperanto word to analyze.
+            _suffix: Internal recursion flag for enabling suffix matching.
+            _prefix: Internal recursion flag for enabling prefix matching.
+            _root: Internal recursion flag for enabling root matching.
+            _full_word_integrated: Internal recursion flag for enabling
+                full-word matching as part of larger words.
+            _correlative: Internal recursion flag for enabling correlative
+                parsing.
+            _full_word_standalone: Internal recursion flag for enabling
+                whole-word full-word matches.
+            _number: Internal recursion flag for enabling number parsing.
+            _name: Internal recursion flag for enabling personal-name parsing.
+
+        Returns:
+            A list of valid analyses. Each analysis is a tuple of
+            ``(segment, WordPart)`` pairs in order.
+        """
+
         if _full_word_standalone and word in self.full_words:
             return [((word, WordPart.FULL_WORD),)]
 
@@ -251,4 +296,16 @@ _ESPERANTO_SPLIT_WORDS = r"[A-Za-zĉĝĥĵŝŭĈĜĤĴŜŬ][A-Za-zĉĝĥĵŝŭĈ
 
 
 def split_sentence(sentence: str):
+    """Split a sentence into Esperanto word-like tokens.
+
+    The tokenizer keeps Esperanto diacritics, optional trailing apostrophes,
+    and numeric forms such as ``3`` and ``3an``.
+
+    Args:
+        sentence: Raw sentence text.
+
+    Returns:
+        A list of token strings.
+    """
+
     return re.findall(_ESPERANTO_SPLIT_WORDS, sentence)

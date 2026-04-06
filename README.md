@@ -21,11 +21,66 @@ print(disvortilo.parse("malliberejo"))
 # > [('mal', 'liber', 'ej', 'o')]
 
 # some have more than one possible output
-# like "Esperanto" which means "a hoping person"
 print(disvortilo.parse("esperantistino"))
 # > [('esper', 'ant', 'ist', 'in', 'o'), ('esperant', 'ist', 'in', 'o')]
 
-# you can also get the morphemes of the word
+# you can also get the morphemes along the their categories
 print(disvortilo.parse_detailed("plibonigojn"))
-# > [(('pli', FULL_WORD), ('bon', ROOT), ('ig', SUFFIX), ('ojn', POS))]
+# > [(('pli', WordPart.FULL_WORD), ('bon', WordPart.ROOT), ('ig', WordPart.SUFFIX), ('ojn', WordPart.POS))]
+```
+
+## API Reference
+
+### `Disvortilo`
+
+Parser class for splitting Esperanto words into morphemes.
+
+#### `Disvortilo.parse(word: str) -> list[tuple[str, ...]]`
+
+Returns all valid analyses of `word`.
+Each analysis is a tuple of morpheme strings in order.
+
+Example return value:
+
+```python
+[('esper', 'ant', 'ist', 'in', 'o'), ('esperant', 'ist', 'in', 'o')]
+```
+
+#### `Disvortilo.parse_detailed(word: str) -> list[tuple[tuple[str, WordPart], ...]]`
+
+Like `parse`, but each morpheme is returned together with its detected category (`WordPart`).
+Each analysis is a tuple of `(morpheme, WordPart)` pairs.
+
+Example return value:
+
+```python
+[(('pli', WordPart.FULL_WORD), ('bon', WordPart.ROOT), ('ig', WordPart.SUFFIX), ('ojn', WordPart.POS))]
+```
+
+### `WordPart`
+
+Enum values used by `parse_detailed`:
+
+- `PREFIX`
+- `ROOT`
+- `SUFFIX`
+- `FULL_WORD`
+- `POS`
+- `NUMBER`
+- `NAME`
+- `CORRELATIVE_START`
+- `CORRELATIVE_END`
+
+### `split_sentence(sentence: str) -> list[str]`
+
+Splits a sentence into Esperanto word-like tokens.
+Supports Esperanto diacritics, optional trailing apostrophes, and forms like `3` and `3an`.
+
+Example:
+
+```python
+from disvortilo import split_sentence
+
+split_sentence("Mi vidas 3an domon.")
+# > ['Mi', 'vidas', '3an', 'domon']
 ```
