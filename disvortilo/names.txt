@@ -1,3 +1,4 @@
+# Humans
 tomas
 tom
 maria
@@ -6,6 +7,10 @@ sami
 johan
 john
 
+# Cities
 boston
 pariz
 toki
+
+# Platforms
+tatoeba
