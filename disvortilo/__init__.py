@@ -62,7 +62,7 @@ CORRELATIVE_WORD_STARTS = {
 CORRELATIVE_WORD_ENDS = {
     "o", "on", "oj", "ojn",
     "u", "un", "uj", "ujn",
-    "a", "an",
+    "a", "an", "aj", "ajn",
     "e", "en",
     "am", "el", "es", "om", "al"
 }
@@ -70,7 +70,7 @@ INTERFIXES = {
     "o", "i", "a", "e"
 }
 PERSONAL_PRONOUNS = {
-    "mi", "vi", "ŝi", "li", "ĝi", "oni", "ri", "ni", "ili"
+    "mi", "vi", "ŝi", "li", "ĝi", "oni", "ri", "ni", "ili", "si"
 }
 
 

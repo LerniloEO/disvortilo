@@ -69,7 +69,7 @@ neĝ
 vilaĝ
 konstru
 sang
-rezervi
+rezerv
 surpriz
 kap
 hund
@@ -130,6 +130,11 @@ pac
 dolar
 evit
 ideal
+vintr
+vin
+butik
+envi
+test
 
 # Colors
 nigr
