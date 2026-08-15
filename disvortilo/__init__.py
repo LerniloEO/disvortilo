@@ -178,6 +178,8 @@ class Disvortilo:
             self,
             word: str,
 
+            n: int | None = None,
+
             # Controls the valid next part
             _suffix: bool = False,
             _prefix: bool = True,
@@ -192,6 +194,8 @@ class Disvortilo:
 
         Args:
             word: Esperanto word to analyze.
+            n: If set, the returned options will be sorted based on a heuristic of the most likely option and
+                limited to n.
             _suffix: Internal recursion flag for enabling suffix matching.
             _prefix: Internal recursion flag for enabling prefix matching.
             _root: Internal recursion flag for enabling root matching.
@@ -288,6 +292,18 @@ class Disvortilo:
                     )
                     for parsed_part in remaining_parsed:
                         valid.append(((part, check),) + parsed_part)
+
+        if n is not None:
+            def key(option):
+                lengths = list(map(len, option))
+                max_length = max(lengths)
+                return (
+                    len(option),  # Prefer fewer parts
+                    min(lengths) - max_length,  # Prefer bigger length difference between parts
+                    lengths.index(max_length)  # Prefer earlier longest parts
+                )
+
+            return sorted(valid, key=key)[:n]
 
         return valid
 
