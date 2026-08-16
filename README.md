@@ -13,7 +13,7 @@ pip install disvortilo
 ## Examples
 
 ```python
-from disvortilo import Disvortilo
+from disvortilo import Disvortilo, rank
 
 disvortilo = Disvortilo()
 
@@ -29,7 +29,7 @@ print(disvortilo.parse_detailed("plibonigojn"))
 # > [(('pli', WordPart.FULL_WORD), ('bon', WordPart.ROOT), ('ig', WordPart.SUFFIX), ('ojn', WordPart.POS))]
 
 # sort the values from most likely to less likely
-print(disvortilo.parse_detailed("envias", n=2))  # get the 2 most likely options
+print(rank(disvortilo.parse_detailed("envias"), n=2))  # get the 2 most likely options
 # > [(('envi', WordPart.ROOT), ('as', WordPart.POS)), (('en', WordPart.FULL_WORD), ('vi', WordPart.FULL_WORD), ('as', WordPart.POS))]
 ```
 
@@ -59,6 +59,17 @@ Example return value:
 
 ```python
 [(('pli', WordPart.FULL_WORD), ('bon', WordPart.ROOT), ('ig', WordPart.SUFFIX), ('ojn', WordPart.POS))]
+```
+
+### `rank(options, n: int | None = None) -> list[tuple[tuple[str, WordPart], ...]]`
+
+Sorts options based on a heuristic of the most likely option.
+
+Note, that this will only work with the returned values from parse_detailed.
+
+Example return value:
+```python
+[(('neĝ', WordPart.ROOT), ('is', WordPart.POS)), (('ne', WordPart.FULL_WORD), ('ĝis', WordPart.FULL_WORD))]
 ```
 
 ### `WordPart`

@@ -178,8 +178,6 @@ class Disvortilo:
             self,
             word: str,
 
-            n: int | None = None,
-
             # Controls the valid next part
             _suffix: bool = False,
             _prefix: bool = True,
@@ -194,8 +192,6 @@ class Disvortilo:
 
         Args:
             word: Esperanto word to analyze.
-            n: If set, the returned options will be sorted based on a heuristic of the most likely option and
-                limited to n.
             _suffix: Internal recursion flag for enabling suffix matching.
             _prefix: Internal recursion flag for enabling prefix matching.
             _root: Internal recursion flag for enabling root matching.
@@ -293,19 +289,34 @@ class Disvortilo:
                     for parsed_part in remaining_parsed:
                         valid.append(((part, check),) + parsed_part)
 
-        if n is not None:
-            def key(option):
-                lengths = list(map(len, option))
-                max_length = max(lengths)
-                return (
-                    len(option),  # Prefer fewer parts
-                    min(lengths) - max_length,  # Prefer bigger length difference between parts
-                    lengths.index(max_length)  # Prefer earlier longest parts
-                )
-
-            return sorted(valid, key=key)[:n]
-
         return valid
+
+
+def rank(options: list[tuple[tuple[str, WordPart], ...]], n: int | None = None) -> list[
+    tuple[tuple[str, WordPart], ...]]:
+    """
+    Sorts options based on a heuristic of the most likely option.
+
+    Note, that this will only work with the returned values from parse_detailed.
+    """
+
+    def key(option):
+        option = tuple(x[0] for x in option)
+        lengths = list(map(len, option))
+        max_length = max(lengths)
+        return (
+            len(option),  # Prefer fewer parts
+            min(lengths) - max_length,  # Prefer bigger length difference between parts
+            lengths.index(max_length)  # Prefer earlier longest parts
+        )
+
+    if len(options) == 0 or len(options) == 1:
+        return options
+
+    if n == 1:
+        return [min(options, key=key)]
+
+    return sorted(options, key=key)[:n]
 
 
 _ESPERANTO_SPLIT_WORDS = r"[A-Za-zĉĝĥĵŝŭĈĜĤĴŜŬ][A-Za-zĉĝĥĵŝŭĈĜĤĴŜŬ0-9]*'?|[0-9]+(?:an?)?"
