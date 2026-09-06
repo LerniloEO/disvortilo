@@ -24,7 +24,7 @@ print(disvortilo.parse("malliberejo"))
 print(disvortilo.parse("esperantistino"))
 # > [('esper', 'ant', 'ist', 'in', 'o'), ('esperant', 'ist', 'in', 'o')]
 
-# you can also get the morphemes along the their categories
+# you can also get the morphemes along their categories
 print(disvortilo.parse_detailed("plibonigojn"))
 # > [(('pli', WordPart.FULL_WORD), ('bon', WordPart.ROOT), ('ig', WordPart.SUFFIX), ('ojn', WordPart.POS))]
 
@@ -49,11 +49,10 @@ Example return value:
 [('esper', 'ant', 'ist', 'in', 'o'), ('esperant', 'ist', 'in', 'o')]
 ```
 
-#### `Disvortilo.parse_detailed(word: str, n: int = None) -> list[tuple[tuple[str, WordPart], ...]]`
+#### `Disvortilo.parse_detailed(word: str) -> list[tuple[tuple[str, WordPart], ...]]`
 
 Like `parse`, but each morpheme is returned together with its detected category (`WordPart`). Each analysis is a tuple
-of `(morpheme, WordPart)` pairs. The `n` options limits the returned options and sorts them based on a heuristic of the
-most likely option.
+of `(morpheme, WordPart)` pairs.
 
 Example return value:
 
