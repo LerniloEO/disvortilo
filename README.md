@@ -99,3 +99,16 @@ from disvortilo import split_sentence
 split_sentence("Mi vidas 3an domon.")
 # > ['Mi', 'vidas', '3an', 'domon']
 ```
+
+### `split_sentence_detailed(sentence: str) -> Generator[tuple[str, int, int], None, None]`
+
+Split a sentence into Esperanto word-line tokens. Unline `split_sentence`, it yields the position of each word.
+
+Example:
+
+```python
+from disvortilo import split_sentence_detailed
+
+list(split_sentence_detailed("Mi vidis 3an domon."))
+# > [('Mi', 0, 2), ('vidis', 3, 8), ('3an', 9, 12), ('domon', 13, 18)]
+```
