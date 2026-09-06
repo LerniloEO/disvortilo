@@ -322,7 +322,7 @@ def rank(options: list[tuple[tuple[str, WordPart], ...]], n: int | None = None) 
 _ESPERANTO_SPLIT_WORDS = r"[A-Za-zĉĝĥĵŝŭĈĜĤĴŜŬ][A-Za-zĉĝĥĵŝŭĈĜĤĴŜŬ0-9]*'?|[0-9]+(?:an?)?"
 
 
-def split_sentence(sentence: str):
+def split_sentence(sentence: str) -> list[str]:
     """Split a sentence into Esperanto word-like tokens.
 
     The tokenizer keeps Esperanto diacritics, optional trailing apostrophes,
@@ -336,3 +336,17 @@ def split_sentence(sentence: str):
     """
 
     return re.findall(_ESPERANTO_SPLIT_WORDS, sentence)
+
+
+def split_sentence_detailed(sentence: str) -> Generator[tuple[str, int, int], None, None]:
+    """
+    Split a sentence into Esperanto word-line tokens. Unline `split_sentence`, it yields the position of each word.
+
+    Args:
+        sentence: Raw sentence text.
+
+    Yields:
+        The token string, the start, and the end
+    """
+    for match in re.finditer(_ESPERANTO_SPLIT_WORDS, sentence):
+        yield sentence[match.start():match.end()], match.start(), match.end()
