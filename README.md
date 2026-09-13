@@ -10,6 +10,12 @@ You can install Disvortilo from PyPI using pip:
 pip install disvortilo
 ```
 
+or uv:
+
+```shell
+uv add disvortilo
+```
+
 ## Examples
 
 ```python
@@ -18,7 +24,7 @@ from disvortilo import Disvortilo, rank
 disvortilo = Disvortilo()
 
 print(disvortilo.parse("malliberejo"))
-# > [('mal', 'liber', 'ej', 'o')]
+# > [('mal', 'lib', 'er', 'ej', 'o'), ('mal', 'liber', 'ej', 'o')]
 
 # some have more than one possible output
 print(disvortilo.parse("esperantistino"))
@@ -26,7 +32,7 @@ print(disvortilo.parse("esperantistino"))
 
 # you can also get the morphemes along their categories
 print(disvortilo.parse_detailed("plibonigojn"))
-# > [(('pli', WordPart.FULL_WORD), ('bon', WordPart.ROOT), ('ig', WordPart.SUFFIX), ('ojn', WordPart.POS))]
+# > [(('pli', WordPart.FULL_WORD), ('bon', WordPart.ROOT), ('ig', WordPart.ROOT|WordPart.SUFFIX), ('ojn', WordPart.POS))]
 
 # sort the values from most likely to less likely
 print(rank(disvortilo.parse_detailed("envias"), n=2))  # get the 2 most likely options
@@ -67,6 +73,7 @@ Sorts options based on a heuristic of the most likely option.
 Note, that this will only work with the returned values from parse_detailed.
 
 Example return value:
+
 ```python
 [(('neĝ', WordPart.ROOT), ('is', WordPart.POS)), (('ne', WordPart.FULL_WORD), ('ĝis', WordPart.FULL_WORD))]
 ```

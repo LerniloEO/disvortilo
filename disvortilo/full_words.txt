@@ -14,10 +14,18 @@ mil
 
 morgaŭ
 sen
-graŭ
+malgraŭ
 ekster
+po
+ve
+ha
+ek
+
 
 ri
+s-ro
+s-rino
+f-ro
 
 # Taken from eoparser/full_words.txt:
 

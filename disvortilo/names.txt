@@ -3,14 +3,25 @@ tomas
 tom
 maria
 mary
+mari
 sami
 johan
 john
+johanin
+fadil
+ken
+ziri
+mark
+petr
+linda
 
 # Cities
 boston
 pariz
 toki
+london
+rom
+nov-jorko
 
 # Platforms
 tatoeba

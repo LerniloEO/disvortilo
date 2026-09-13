@@ -5,12 +5,13 @@ from collections.abc import Generator
 from functools import cache
 
 
-class WordPart(enum.Enum):
+class WordPart(enum.IntFlag):
     """Semantic categories assigned to parsed Esperanto morphemes.
 
     The values are used by :meth:`Disvortilo.parse_detailed` to label each
     segment of a parsed word.
     """
+    NONE = 0
 
     PREFIX = enum.auto()
     ROOT = enum.auto()
@@ -25,7 +26,7 @@ class WordPart(enum.Enum):
     CORRELATIVE_END = enum.auto()
 
     def __repr__(self):
-        return self.name
+        return self.name or ""
 
 
 @cache
@@ -86,7 +87,7 @@ class Disvortilo:
 
         self.suffixes = _load_word_list("suffixes.txt")
         self.prefixes = _load_word_list("prefixes.txt")
-        self.roots = _load_word_list("roots.txt")
+        self.roots = _load_word_list("roots.txt").union(self.suffixes, self.prefixes)
         self.full_words = _load_word_list("full_words.txt")
         self.names = _load_word_list("names.txt")
         self.countries = _load_word_list("countries.txt")
@@ -94,16 +95,18 @@ class Disvortilo:
         self.roots.update(self.countries)  # all country names are also roots.
 
     def _is_in(self, word: str, _suffix, _prefix, _root, _full_word) -> WordPart | None:
-        if _suffix and word in self.suffixes:
-            return WordPart.SUFFIX
-        elif _prefix and word in self.prefixes:
-            return WordPart.PREFIX
-        elif _full_word and word in self.full_words:
-            return WordPart.FULL_WORD
-        elif _root and word in self.roots:
-            return WordPart.ROOT
+        result = WordPart.NONE
 
-        return None
+        if _suffix and word in self.suffixes:
+            result |= WordPart.SUFFIX
+        if _prefix and word in self.prefixes:
+            result |= WordPart.PREFIX
+        if _full_word and word in self.full_words:
+            result |= WordPart.FULL_WORD
+        if _root and word in self.roots:
+            result |= WordPart.ROOT
+
+        return result
 
     def _parse_correlative(self, word: str, _allow_remaining: bool = False) -> list[tuple[tuple[str, WordPart], ...]]:
         for part in _growing_string(word):
@@ -270,19 +273,19 @@ class Disvortilo:
                     for parsed_part in remaining_parsed:
                         valid.append(((part, check), (remaining[0], WordPart.POS)) + parsed_part)
 
-                if (check != WordPart.PREFIX
+                if (check & ~WordPart.PREFIX
                         and (remaining in WORD_ENDS or ((part in self.countries and remaining == "io")
                                                         or (part in PERSONAL_PRONOUNS and remaining == "n")))
                 ):
                     # Allow if the prefix can be used as a root too. Disallow an end after a prefix
-                    valid.append(((part, check), (remaining, WordPart.POS)))
+                    valid.append(((part, check & ~WordPart.PREFIX), (remaining, WordPart.POS)))
                 else:  # try recursion
                     remaining_parsed = self.parse_detailed(
                         remaining,
-                        _suffix=check != WordPart.PREFIX,  # Disallow words without roots like praanto
+                        _suffix=bool(check & ~WordPart.PREFIX),  # Disallow suffixes if the previous part was a prefix
                         _correlative=False,
                         # Allow words like malantaŭ and dudek
-                        _full_word_standalone=check in {WordPart.PREFIX, WordPart.FULL_WORD},
+                        _full_word_standalone=bool(check & (WordPart.PREFIX | WordPart.FULL_WORD)),
                         _number=False,
                         _name=False
                     )
