@@ -67,7 +67,7 @@ CORRELATIVE_WORD_ENDS = {
     "am", "el", "es", "om", "al"
 }
 INTERFIXES = {
-    "o", "i", "a", "e"
+    "o", "i", "a", "e", "-"
 }
 PERSONAL_PRONOUNS = {
     "mi", "vi", "ŝi", "li", "ĝi", "oni", "ri", "ni", "ili", "si"
@@ -135,7 +135,7 @@ class Disvortilo:
                 remaining = word[len(part):]
                 if not remaining:
                     valid.append(((part, WordPart.NUMBER),))
-                elif remaining in ("a", "an"):
+                elif remaining in ("a", "an", "-a", "-an"):
                     valid.append(((part, WordPart.NUMBER), (remaining, WordPart.POS)))
 
         return valid
@@ -301,10 +301,10 @@ def rank(options: list[tuple[tuple[str, WordPart], ...]], n: int | None = None) 
     """
 
     def key(option):
-        option = tuple(x[0] for x in option)
-        lengths = list(map(len, option))
+        lengths = tuple(len(x[0]) for x in option)
         max_length = max(lengths)
         return (
+            bool(option[-1][1] != WordPart.POS) if option else False,  # Prefer last part POS
             len(option),  # Prefer fewer parts
             min(lengths) - max_length,  # Prefer bigger length difference between parts
             lengths.index(max_length)  # Prefer earlier longest parts
@@ -319,7 +319,12 @@ def rank(options: list[tuple[tuple[str, WordPart], ...]], n: int | None = None) 
     return sorted(options, key=key)[:n]
 
 
-_ESPERANTO_SPLIT_WORDS = r"[A-Za-zĉĝĥĵŝŭĈĜĤĴŜŬ][A-Za-zĉĝĥĵŝŭĈĜĤĴŜŬ0-9]*'?|[0-9]+(?:an?)?"
+_ESPERANTO_SPLIT_WORDS = (
+    r"[A-Za-zĉĝĥĵŝŭĈĜĤĴŜŬ]"
+    r"[A-Za-zĉĝĥĵŝŭĈĜĤĴŜŬ0-9\-]*"
+    r"'?"
+    r"|[0-9]+(?:-?an?)?"
+)
 
 
 def split_sentence(sentence: str) -> list[str]:

@@ -139,6 +139,12 @@ kalson
 zon
 mam
 ŝik
+respublik
+bord
+ekvator
+demokrat
+sankt
+uni
 
 # Colors
 nigr
