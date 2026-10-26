@@ -1,8 +1,9 @@
 import enum
 import importlib.resources
-import re
 from collections.abc import Generator
 from functools import cache
+
+import regex
 
 
 class WordPart(enum.IntFlag):
@@ -138,8 +139,8 @@ class Disvortilo:
                 remaining = word[len(part):]
                 if not remaining:
                     valid.append(((part, WordPart.NUMBER),))
-                elif remaining in ("a", "an", "-a", "-an"):
-                    valid.append(((part, WordPart.NUMBER), (remaining, WordPart.POS)))
+                elif remaining in ("a", "an", "-a", "-an", "aj", "ajn", "-aj", "-ajn"):
+                    valid.append(((part, WordPart.NUMBER), (remaining.removeprefix("-"), WordPart.POS)))
 
         return valid
 
@@ -307,7 +308,9 @@ def rank(options: list[tuple[tuple[str, WordPart], ...]], n: int | None = None) 
         lengths = tuple(len(x[0]) for x in option)
         max_length = max(lengths)
         return (
-            bool(option[-1][1] != WordPart.POS) if option else False,  # Prefer last part POS
+            bool(
+                not (option[-1][1] == WordPart.POS or len(option) == 1 and option[0][1] == WordPart.NAME)
+            ) if option else False,  # Prefer last part POS or the whole part name
             len(option),  # Prefer fewer parts
             min(lengths) - max_length,  # Prefer bigger length difference between parts
             lengths.index(max_length)  # Prefer earlier longest parts
@@ -323,10 +326,10 @@ def rank(options: list[tuple[tuple[str, WordPart], ...]], n: int | None = None) 
 
 
 _ESPERANTO_SPLIT_WORDS = (
-    r"[A-Za-zĉĝĥĵŝŭĈĜĤĴŜŬ]"
-    r"[A-Za-zĉĝĥĵŝŭĈĜĤĴŜŬ0-9\-]*"
+    r"\p{L}"
+    r"[\p{L}0-9\-]*"
     r"'?"
-    r"|[0-9]+(?:-?an?)?"
+    r"|[0-9]+(?:-?aj?n?)?"
 )
 
 
@@ -343,7 +346,7 @@ def split_sentence(sentence: str) -> list[str]:
         A list of token strings.
     """
 
-    return re.findall(_ESPERANTO_SPLIT_WORDS, sentence)
+    return regex.findall(_ESPERANTO_SPLIT_WORDS, sentence)
 
 
 def split_sentence_detailed(sentence: str) -> Generator[tuple[str, int, int], None, None]:
@@ -356,5 +359,5 @@ def split_sentence_detailed(sentence: str) -> Generator[tuple[str, int, int], No
     Yields:
         The token string, the start, and the end
     """
-    for match in re.finditer(_ESPERANTO_SPLIT_WORDS, sentence):
+    for match in regex.finditer(_ESPERANTO_SPLIT_WORDS, sentence):
         yield sentence[match.start():match.end()], match.start(), match.end()

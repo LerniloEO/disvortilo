@@ -1,9 +1,11 @@
 [project]
 name = "disvortilo"
-version = "0.9.0"
+version = "0.9.1"
 description = "Disvortilo is a simple tool that breaks Esperanto words into roots and affixes."
 requires-python = ">=3.9"
-dependencies = []
+dependencies = [
+    "regex>=2026.1.15",
+]
 authors = [
     { name = "Franz", email = "scaui0@gmx.net" }
 ]

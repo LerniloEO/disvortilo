@@ -14,6 +14,19 @@ ziri
 mark
 petr
 linda
+marik
+bob
+bill
+jesuo
+andreo
+moseo
+paŭl
+jakob
+trump
+zamenhof
+lejla
+smith
+luiĝi
 
 # Cities
 boston
@@ -22,6 +35,8 @@ toki
 london
 rom
 nov-jorko
+kioto
+berlino
 
 # Platforms
 tatoeba
